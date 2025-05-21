@@ -39,7 +39,7 @@ with col_main:
 
     st.markdown(f"""
     <div style='display: flex; justify-content: center;'>
-        <div style='display: flex; align-items: center; border: 2px solid #ccc; border-radius: 12px; padding: 20px; background-color: #fafafa;'>
+        <div style='display: flex; align-items: center; border: 2px solid #ccc; border-radius: 12px; padding: 20px; background-color: #3F324C;'>
             <div style='text-align: center; margin: 0 40px;'>
                 <img src='{get_team_logo_url(home_team)}' width='100'><br>
                 <strong>{home_team}</strong>
