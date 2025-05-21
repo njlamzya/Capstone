@@ -4,18 +4,6 @@ import numpy as np
 
 df = pd.read_csv('DATA FINAL EPL 2010-2025.csv')
 
-def assign_season(date):
-    if pd.isnull(date):
-        return 'Unknown'
-    if date >= pd.Timestamp('2024-08-01') and date <= pd.Timestamp('2025-07-31'):
-        return '2024/2025'
-    elif date >= pd.Timestamp('2025-08-01') and date <= pd.Timestamp('2026-07-31'):
-        return '2025/2026'
-    else:
-        return 'Other'
-
-df['Season'] = df['Date'].apply(assign_season)
-
 st.set_page_config(layout="wide")
 
 col_side, col_main = st.columns([1, 3], gap="large")
