@@ -2,17 +2,22 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Load dataset
 df = pd.read_csv('DATA FINAL EPL 2010-2025.csv')
 
-# Tambahkan kolom season jika belum ada
-if 'Season' not in df.columns:
-    df['Season'] = df['Date'].apply(lambda x: '2024/2025' if '2024' in x or '2025' in x else 'Other')
+def assign_season(date):
+    if pd.isnull(date):
+        return 'Unknown'
+    if date >= pd.Timestamp('2024-08-01') and date <= pd.Timestamp('2025-07-31'):
+        return '2024/2025'
+    elif date >= pd.Timestamp('2025-08-01') and date <= pd.Timestamp('2026-07-31'):
+        return '2025/2026'
+    else:
+        return 'Other'
 
-# Atur layout penuh
+df['Season'] = df['Date'].apply(assign_season)
+
 st.set_page_config(layout="wide")
 
-# Layout utama: sidebar kiri dan konten utama kanan
 col_side, col_main = st.columns([1, 3], gap="large")
 
 with col_side:
@@ -20,15 +25,16 @@ with col_side:
         st.image('https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg', width=100)
         st.title("🏆 EPL Match Predictor")
         st.markdown("---")
+        st.subheader("⚽ Pilih Tim")
+        home_team = st.selectbox('Home Team', df['HomeTeam'].sort_values().unique(), key='home_team')
+        away_team = st.selectbox('Away Team', df['AwayTeam'].sort_values().unique(), key='away_team')
+
+        # Letakkan Season selector setelah tim
         st.subheader("📅 Pilih Musim")
         season = st.selectbox('Season', ['2024/2025', '2025/2026'], key='season')
-        st.subheader("⚽ Pilih Tim")
-        filtered_df = df[df['Season'] == season]
-        home_team = st.selectbox('Home Team', filtered_df['HomeTeam'].sort_values().unique(), key='home_team')
-        away_team = st.selectbox('Away Team', filtered_df['AwayTeam'].sort_values().unique(), key='away_team')
+
         st.markdown("---")
 
-# Fungsi ambil URL logo tim
 def get_team_logo_url(team_name):
     team_logos = {
         'Man United': 'https://resources.premierleague.com/premierleague/badges/t1.png',
@@ -39,7 +45,7 @@ def get_team_logo_url(team_name):
     }
     return team_logos.get(team_name, 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg')
 
-# Tampilkan bagian utama
+# bagian utama
 with col_main:
     st.markdown("<h2 style='text-align: center;'>Hasil Prediksi Pertandingan</h2>", unsafe_allow_html=True)
 
